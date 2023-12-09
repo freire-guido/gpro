@@ -1,5 +1,13 @@
 {
     "username": "user",
     "password": "pass",
-    "tables": [0, 1, 2, 3, 5, 8, 19, 21]
+    "tables": {
+        "practice": 1,
+        "wear": 2,
+        "laps": 3,
+        "setup": 5,
+        "driver": 8,
+        "pits": 19,
+        "financial": 21
+    }
 }

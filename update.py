@@ -23,8 +23,8 @@ while driver.current_url != 'https://www.gpro.net/gb/RaceAnalysis.asp':
 
 for race in range(fromRace, toRace + 1):
     driver.get(f'https://www.gpro.net/gb/RaceAnalysis.asp?SR={season},{race}')
-    soup_tables = BeautifulSoup(driver.page_source).find_all('table')
-    for table in config['tables']:
-        dir = f'data/{season}/{race}_{table}'
+    soup_tables = BeautifulSoup(driver.page_source, "lxml").find_all('table')
+    for name, index in config['tables'].items():
+        dir = f'data/{season}/{race}_{name}'
         os.makedirs(os.path.dirname(dir), exist_ok = True)
-        pd.read_html(str(soup_tables[table]))[0].to_pickle(dir)
+        pd.read_html(str(soup_tables[index]))[0].to_pickle(dir)
