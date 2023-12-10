@@ -28,3 +28,9 @@ for race in range(fromRace, toRace + 1):
         dir = f'data/{season}/{race}_{name}'
         os.makedirs(os.path.dirname(dir), exist_ok = True)
         pd.read_html(str(soup_tables[index]))[0].to_pickle(dir)
+
+for table in config['tables']:
+    races = [file.split('_')[0] for file in os.listdir(f'data/{season}') if file.split('_')[1] == 'laps']
+    dfs = [pd.read_pickle(f'data/{season}/{file}')
+           for file in os.listdir(f'data/{season}') if file.split('_')[1] == table]
+    pd.concat(dfs, keys = races).to_pickle(f'data/{season}/merge_{table}')
