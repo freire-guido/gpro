@@ -9,5 +9,6 @@
         "driver": 8,
         "pits": 19,
         "financial": 21
-    }
+    },
+    "merge": true
 }
