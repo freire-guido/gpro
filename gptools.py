@@ -28,16 +28,17 @@ def merge_data(season, tables):
     for table in tables:
         if table == 'practice':
             header = 1
+        elif table == 'laps':
+            header = 0
         elif table == 'setup':
             header = 0
         else:
             header = None
-        races = [file.split('_')[0] for file in os.listdir(f'data/{season}') if file.split('_')[1] == 'laps']
+        races = [file.split('_')[0] for file in os.listdir(f'data/{season}') if file.split('_')[1] == 'laps' and file.split('_')[0] != 'merge']
         if header != None:
             dfs = [set_header(pd.read_pickle(f'data/{season}/{file}'), header)
                 for file in os.listdir(f'data/{season}') if file.split('_')[1] == table and file.split('_')[0] != 'merge']
         else:
             dfs = [pd.read_pickle(f'data/{season}/{file}')
                 for file in os.listdir(f'data/{season}') if file.split('_')[1] == table and file.split('_')[0] != 'merge']
-            
         pd.concat(dfs, keys = races).to_pickle(f'data/{season}/merge_{table}')
