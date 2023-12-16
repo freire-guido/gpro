@@ -36,7 +36,6 @@ class GPDriver:
         soup_tables = BeautifulSoup(self.driver.page_source, "lxml").find_all('table')
         pd.read_html(str(soup_tables[0]))[0].to_pickle(f'data/{self.season}/tracks')
 
-
     def merge_data(self):
         for table in self.config['tables']:
             if table == 'practice':
