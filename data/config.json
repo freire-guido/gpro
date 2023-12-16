@@ -1,6 +1,4 @@
 {
-    "username": "user",
-    "password": "pass",
     "tables": {
         "practice": 1,
         "wear": 2,
@@ -10,5 +8,6 @@
         "pits": 19,
         "financial": 21
     },
-    "merge": true
+    "merge": true,
+    "tracks": true
 }

@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from selenium import webdriver
 
 import pandas as pd
 import os
@@ -18,6 +17,11 @@ def update_data(driver, season, race, tables):
         dir = f'data/{season}/{race}_{name}'
         os.makedirs(os.path.dirname(dir), exist_ok = True)
         pd.read_html(str(soup_tables[index]))[0].to_pickle(dir)
+
+def update_tracks(driver, season):
+    driver.get('https://www.gpro.net/gb/ViewTracks.asp?mode=calendar')
+    soup_tables = BeautifulSoup(driver.page_source, "lxml").find_all('table')
+    pd.read_html(str(soup_tables[0]))[0].to_pickle(f'data/{season}/tracks')
 
 def set_header(df, row):
     df.columns = df.iloc[row]
