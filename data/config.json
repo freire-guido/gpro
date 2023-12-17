@@ -8,6 +8,11 @@
         "pits": 19,
         "financial": 21
     },
+    "quali": {
+        "weather1": 3,
+        "weather2": 4,
+        "practice": 5
+    },
     "merge": true,
     "tracks": true
 }
