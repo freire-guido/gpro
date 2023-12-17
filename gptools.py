@@ -66,5 +66,8 @@ class GPDriver:
         for name, index in self.config['quali'].items():
             dir = f'data/quali_{name}'
             os.makedirs(os.path.dirname(dir), exist_ok = True)
-            pd.read_html(str(tables[index]))[0].to_pickle(dir)
+            if name == 'practice':
+                set_header(pd.read_html(str(tables[index]))[0], 1).to_pickle(dir)
+            else:
+                pd.read_html(str(tables[index]))[0].to_pickle(dir)
         print('Updated qualifying')
