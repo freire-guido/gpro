@@ -12,8 +12,8 @@
 4. *(optional)* Choose what "tables" and "quali" information from the race analysis and qualify screens to grab, as well as whether to merge and get season track data by editing the [config.json](data/config.json) file (comes with sensible defaults).
 
 ### Usage:
-* ```main.py [season] [fromRace] [toRace]``` will dump the data as outlined in [config.json](data/config.json) in the [data](data) folder.
+* ```python3 main.py [season] [fromRace] [toRace]``` will dump the data as outlined in [config.json](data/config.json) in the [data](data) folder.
 
-*Example:* ```main,py 96 10 13``` will create a ```data/96``` folder with the tables in [config.json](data/config.json):"tables"
+*Example:* ```python3 main.py 96 10 13``` will create a ```data/96``` folder with the tables in [config.json](data/config.json):"tables"
 
-* ```main.py quali``` will dump your next race's qualifying data (testing, setup, etc.) as outlined in [config.json](data/config.json)
+* ```python3 main.py quali``` will dump your next race's qualifying data (testing, setup, etc.) as outlined in [config.json](data/config.json)
