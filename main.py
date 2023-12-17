@@ -13,3 +13,4 @@ if config['merge']:
     driver.merge_data()
 if config['tracks']:
     driver.update_tracks()
+print('Success')
