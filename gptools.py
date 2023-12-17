@@ -9,9 +9,8 @@ def set_header(df, row):
     return df
 
 class GPDriver:
-    def __init__(self, config, season):
+    def __init__(self, config):
         self.config = config
-        self.season = season
         self.driver = webdriver.Firefox()
         print('Waiting for login...')
         self.driver.get('https://www.gpro.net/gb/RaceAnalysis.asp')
@@ -19,27 +18,29 @@ class GPDriver:
             pass
         print('Logged in')
 
-    def update_data(self, race):
-        self.driver.get(f'https://www.gpro.net/gb/RaceAnalysis.asp?SR={self.season},{race}')
-        soup_tables = BeautifulSoup(self.driver.page_source, "lxml").find_all('table')
+    def get_tables(self, url):
+        self.driver.get(url)
+        return BeautifulSoup(self.driver.page_source, "lxml").find_all('table')
+
+    def update_data(self, season, race):
+        tables = self.get_tables(f'https://www.gpro.net/gb/RaceAnalysis.asp?SR={season},{race}')
         for name, index in self.config['tables'].items():
-            dir = f'data/{self.season}/{race}_{name}'
+            dir = f'data/{season}/{race}_{name}'
             os.makedirs(os.path.dirname(dir), exist_ok = True)
-            pd.read_html(str(soup_tables[index]))[0].to_pickle(dir)
+            pd.read_html(str(tables[index]))[0].to_pickle(dir)
         print(f'Updated race {race}')
 
-    def update_races(self, races):
+    def update_races(self, season, races):
         for race in races:
-            self.update_data(race)
+            self.update_data(season, race)
         print(f'All races updated')
 
-    def update_tracks(self):
-        self.driver.get('https://www.gpro.net/gb/ViewTracks.asp?mode=calendar')
-        soup_tables = BeautifulSoup(self.driver.page_source, "lxml").find_all('table')
-        pd.read_html(str(soup_tables[0]))[0].to_pickle(f'data/{self.season}/tracks')
+    def update_tracks(self, season):
+        tables = self.get_tables('https://www.gpro.net/gb/ViewTracks.asp?=mode=calendar')
+        pd.read_html(str(tables[0]))[0].to_pickle(f'data/{season}/tracks')
         print('Updated tracks')
 
-    def merge_data(self):
+    def merge_data(self, season):
         print('Merging data')
         for table in self.config['tables']:
             if table == 'practice':
@@ -51,10 +52,19 @@ class GPDriver:
             else:
                 header = None
 
-            races = [file.split('_')[0] for file in os.listdir(f'data/{self.season}') if file.split('_')[1] == 'laps' and file.split('_')[0] != 'merge']
+            races = [file.split('_')[0] for file in os.listdir(f'data/{season}')
+                     if file.split('_')[0] not in ['tracks', 'merge'] and file.split('_')[1] == 'laps']
             if header != None:
-                dfs = [set_header(pd.read_pickle(f'data/{self.season}/{race}_{table}'), header) for race in races]
+                dfs = [set_header(pd.read_pickle(f'data/{season}/{race}_{table}'), header) for race in races]
             else:
-                dfs = [pd.read_pickle(f'data/{self.season}/{race}_{table}') for race in races]
-            pd.concat(dfs, keys = races).to_pickle(f'data/{self.season}/merge_{table}')
+                dfs = [pd.read_pickle(f'data/{season}/{race}_{table}') for race in races]
+            pd.concat(dfs, keys = races).to_pickle(f'data/{season}/merge_{table}')
         print('Data merged')
+    
+    def update_qualifying(self):
+        tables = self.get_tables('https://www.gpro.net/gb/Qualify.asp')
+        for name, index in self.config['quali'].items():
+            dir = f'data/quali_{name}'
+            os.makedirs(os.path.dirname(dir), exist_ok = True)
+            pd.read_html(str(tables[index]))[0].to_pickle(dir)
+        print('Updated qualifying')
