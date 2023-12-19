@@ -36,7 +36,7 @@ class GPDriver:
         print(f'All races updated')
 
     def update_tracks(self, season):
-        tables = self.get_tables('https://www.gpro.net/gb/ViewTracks.asp?=mode=calendar')
+        tables = self.get_tables('https://www.gpro.net/gb/ViewTracks.asp?mode=calendar')
         pd.read_html(str(tables[0]))[0].to_pickle(f'data/{season}/tracks')
         print('Updated tracks')
 
