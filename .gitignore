@@ -1,3 +1,4 @@
 data/**
+clean/**
 test**
 __pycache__

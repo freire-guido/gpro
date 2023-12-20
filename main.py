@@ -1,5 +1,6 @@
 from gptools import GPDriver
-import json, sys
+from preprocessing import clean
+import json, sys, os
 
 mode = sys.argv[1]
 with open('data/config.json') as config:
@@ -15,8 +16,13 @@ if mode != "quali":
     driver.update_races(season, range(fromRace, toRace + 1))
     if config['merge']:
         driver.merge_data(season)
+        os.makedirs(os.path.dirname(f'clean/{season}/'), exist_ok = True)
+        for table in config['tables']:
+            if table in clean.keys():
+                clean[table](f'data/{season}/merge_{table}', f'clean/{season}/{table}')
     if config['tracks']:
         driver.update_tracks(season)
+
     print('Success')
 
 else:
