@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 idx = pd.IndexSlice
 
-def to_timedelta(str, format = '%M:%S.%fs'):
+def to_seconds(str, format = '%M:%S.%fs'):
     if str == '-':
         return pd.NA
     parsed_time = datetime.strptime(str, format)
@@ -10,7 +10,7 @@ def to_timedelta(str, format = '%M:%S.%fs'):
         minutes=parsed_time.minute,
         seconds=parsed_time.second,
         microseconds=parsed_time.microsecond
-    )
+    ).total_seconds()
 
 def clean_pits(path, out):
     pits = pd.read_pickle(path)
@@ -29,7 +29,7 @@ def clean_laps(path, out):
     laps['Pos'] = pd.to_numeric(laps['Pos'])
     laps['Temp'] = pd.to_numeric(laps['Temp'].str[:-1])
     laps['Hum'] = pd.to_numeric(laps['Hum'].str[:-1])/100
-    laps['Lap time'] = laps['Lap time'].apply(lambda t: to_timedelta(t, '%M:%S.%f'))
+    laps['Lap time'] = laps['Lap time'].apply(lambda t: to_seconds(t, '%M:%S.%f'))
     laps.to_pickle(out)
 
 def clean_tracks(path, out):
@@ -40,8 +40,8 @@ def clean_tracks(path, out):
 
 def clean_practice(path, out):
     practice = pd.read_pickle(path)
-    practice['Net time'] = practice['Net time'].apply(lambda t: to_timedelta(t).total_seconds())
-    practice['Lap time'] = practice['Lap time'].apply(lambda t: to_timedelta(t).total_seconds())
+    practice['Net time'] = practice['Net time'].apply(lambda t: to_seconds(t))
+    practice['Lap time'] = practice['Lap time'].apply(lambda t: to_seconds(t))
     practice['Driver mistake'] = pd.to_numeric(practice['Driver mistake'].str[:-1])
     practice.to_pickle(out)
 
