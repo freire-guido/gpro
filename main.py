@@ -22,7 +22,8 @@ if mode != "quali":
                 clean[table](f'data/{season}/merge_{table}', f'clean/{season}/{table}')
     if config['tracks']:
         driver.update_tracks(season)
-
+        if config['merge']:
+            clean['tracks'](f'data/{season}/tracks', f'clean/{season}/tracks')
     print('Success')
 
 else:
