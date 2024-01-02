@@ -8,7 +8,14 @@ with open('data/config.json') as config:
 
 driver = GPDriver(config)
 
-if mode != "quali":
+if mode == "quali":
+    print('Qualifying')
+    driver.update_qualifying()
+elif mode == "tracks":
+    season = int(sys.argv[2])
+    print('Tracks')
+    driver.update_tracks(season)
+else:
     season = int(mode)
     fromRace = int(sys.argv[2])
     toRace = int(sys.argv[3])
@@ -24,9 +31,5 @@ if mode != "quali":
         driver.update_tracks(season)
         if config['merge']:
             clean['tracks'](f'data/{season}/tracks', f'clean/{season}/tracks')
-    print('Success')
-
-else:
-    print('Qualifying')
-    driver.update_qualifying()
-    print('Success')
+            
+print('Success')
